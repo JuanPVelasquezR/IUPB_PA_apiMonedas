@@ -55,8 +55,4 @@ public class PaisControlador {
     }
 
 
-    @GetMapping(value = "/capital/{pais}")
-    public CapitalDto getCapital(@PathVariable String pais) {
-        return servicio.getCapital(pais);
-    }
 }

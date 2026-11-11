@@ -1,7 +1,7 @@
 package monedas.api.core.servicios;
 
 import monedas.api.dominio.entidades.Pais;
-import monedas.api.dominio.dtos.CapitalDto;
+
 import java.util.List;
 
 
@@ -19,5 +19,4 @@ import java.util.List;
 
      boolean eliminar(int id);
 
-     CapitalDto getCapital(String nombre);
 }

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import monedas.api.core.servicios.*;
 import monedas.api.core.repositorios.*;
-import monedas.api.core.integracion.*;
 import monedas.api.dominio.entidades.*;
 import monedas.api.dominio.dtos.*;
 
@@ -17,9 +16,6 @@ public class PaisServicio implements IPaisServicio {
 
     @Autowired
     private IPaisRepositorio repositorio;
-
-    @Autowired
-    private IPaisServicioExterno integracion;
 
     @Override
     public List<Pais> listar() {
@@ -52,9 +48,5 @@ public class PaisServicio implements IPaisServicio {
         return repositorio.eliminar(id);
     }
 
-    @Override
-    public CapitalDto getCapital(String nombre) {
-        return integracion.getCapital(nombre);
-    }
 
 }
