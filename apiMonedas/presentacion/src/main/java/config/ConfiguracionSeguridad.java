@@ -12,6 +12,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.config.Customizer;
 
 import monedas.api.aplicacion.seguridad.*;
+import monedas.api.presentacion.seguridad.*;
 
 @Configuration
 @EnableWebSecurity
@@ -20,6 +21,9 @@ public class ConfiguracionSeguridad {
 
     @Autowired
     private FiltroSeguridad filtro;
+
+    @Autowired
+    private FiltroConcurrencia filtroConcurrencia;
 
     @Bean
     public UserDetailsService servicioUsuario() {
@@ -44,6 +48,7 @@ public class ConfiguracionSeguridad {
                                 .permitAll()
                                 // .requestMatchers("/api/monedas/**").permitAll()
                                 .anyRequest().authenticated())
+                .addFilterBefore(filtroConcurrencia, UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(filtro, UsernamePasswordAuthenticationFilter.class)
                 .build();
 

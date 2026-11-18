@@ -45,6 +45,7 @@ public class PruebaSaturacion {
             CountDownLatch sincronizador = new CountDownLatch(1);
 
             AtomicInteger contadorExitosas = new AtomicInteger(0);
+            AtomicInteger contadorRechazos = new AtomicInteger(0);
             AtomicInteger contadorErrores = new AtomicInteger(0);
 
             List<Future<?>> futuros = new ArrayList<>();
@@ -61,6 +62,11 @@ public class PruebaSaturacion {
                         if (estado == 200 || estado == 401 || estado == 403) {
                             contadorExitosas.incrementAndGet();
                         }
+                        if (estado == 429){
+                            contadorRechazos.incrementAndGet();
+                        }
+
+
 
                     } catch (Exception e) {
                         contadorErrores.incrementAndGet();
@@ -73,10 +79,12 @@ public class PruebaSaturacion {
 
             ejecutor.shutdown();
 
+            //espera a recibir las solicitudes
             ejecutor.awaitTermination(30, TimeUnit.SECONDS);
 
             System.out.println("Nivel de Estrés: " + totalSolicitudes + " solicitudes concurrentes");
             System.out.println("Solicitudes atendidas: " + contadorExitosas.get());
+            System.out.println("Solicitudes rechazadas: " + contadorRechazos.get());
             System.out.println("Errores de conexión: " + contadorErrores.get());
         }
 
