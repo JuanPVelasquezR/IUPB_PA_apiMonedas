@@ -11,6 +11,7 @@ import monedas.api.core.servicios.*;
 import monedas.api.dominio.entidades.*;
 import monedas.api.dominio.dtos.*;
 import monedas.api.aplicacion.seguridad.*;
+import monedas.api.aplicacion.concurrencia.ContadorIntentosLogin;
 
 @Service
 public class UsuarioServicio implements IUsuarioServicio {
@@ -21,8 +22,29 @@ public class UsuarioServicio implements IUsuarioServicio {
     @Autowired
     private SeguridadServicio servicioSeguridad;
 
+    @Autowired
+    private ContadorIntentosLogin contadorIntentos;
+
+    public UsuarioServicio() {
+    }
+
+    public UsuarioServicio(IUsuarioRepositorio repositorio,
+                           SeguridadServicio servicioSeguridad,
+                           ContadorIntentosLogin contadorIntentos) {
+        this.repositorio = repositorio;
+        this.servicioSeguridad = servicioSeguridad;
+        this.contadorIntentos = contadorIntentos;
+    }
+
+    public ContadorIntentosLogin getContadorIntentos() {
+        return contadorIntentos;
+    }
+
     @Override
     public UsuarioLoginDto login(String nombreUsuario, String clave) {
+        if (contadorIntentos != null) {
+            contadorIntentos.registrarIntento();
+        }
         Usuario usuarioObtenido = repositorio.login(nombreUsuario, clave);
         UsuarioLoginDto userLoginResponseDto = new UsuarioLoginDto(usuarioObtenido);
         if (usuarioObtenido != null) {
